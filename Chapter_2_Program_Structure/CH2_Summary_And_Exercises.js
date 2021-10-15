@@ -22,3 +22,46 @@
  * Dans ce cas-là, l'appel à la fonction constitue une expression (ex: Math.max(2,4)), qui peut être réutilisée dans des expressions plus large.
  *
  */
+
+/** EXERCISES */
+
+/** LOOPING A TRIANGLE */
+
+for (let i = 0, hashtag = "#" ; i < 7; i++){
+   console.log(hashtag)
+   hashtag += "#";
+}
+
+/** FIZZBUZ */
+
+let fizzBuzz = [];
+for(let i = 1; i<=100; i++){
+   if (i%3 === 0 && i%5 === 0) fizzBuzz.push("FizzBuzz");
+   else if (i%3 === 0) fizzBuzz.push("Fizz");
+   else if (i%5 === 0) fizzBuzz.push("Buzz");
+   else fizzBuzz.push(i);
+}
+console.log(fizzBuzz);
+
+/** CHESSBOARD */
+
+let chessboard = "";
+let size = 8;
+for(let line = 0; line < size ; line++)
+{
+   for(let column = 0; column < size; column++)
+   {
+      if(line % 2 === 0)
+      {
+         if(column % 2 === 0) chessboard += " ";
+         else chessboard += "#";
+      }
+      else
+      {
+         if(column % 2 === 0) chessboard += "#";
+         else chessboard += " ";
+      }
+   }
+   chessboard += "\n";
+}
+console.log(chessboard);
