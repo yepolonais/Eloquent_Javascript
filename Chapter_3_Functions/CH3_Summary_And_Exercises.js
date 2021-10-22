@@ -45,7 +45,53 @@
  * let twice = multiplier(2);
  * console.log(twice(5)); → 10
  *
+ * RECURSION
+ * En Javascript, une récursion est en général trois fois moins performant qu'utiliser une boucle.
+ * La question est de savoir quand la compréhension du code doit primer sur sa vitesse d'exécution
+ *
+ * FUNCTIONS AND SIDE EFFECTS
+ * Une fonction pure est une fonction qui ne produit pas d'effet de bord (comme un console.log) et qui retourne toujours le même résultat lorsqu'on lui passe les mêmes paramètres
+ * Elle ne s'appuie pas sur des variables globales susceptibles de changer
+ *
  */
 
 /** EXERCISES */
 
+/** MINIMUM */
+function min(a,b){
+   if(a<b) return a;
+   else return b;
+}
+
+console.log(min(0,10));
+console.log(min(19,12));
+
+/** RECURSION */
+function isEven(number){
+   if(number < 0) number = -number;
+   if (number === 0) return true;
+   else if (number === 1) return false;
+   else return isEven(number -2);
+}
+
+console.log(isEven(-2));
+
+/** BEAN COUNTING */
+function countBs(string){
+   let upperCaseB = 0;
+   for(let cursor = 0; cursor < string.length; cursor++){
+      if(string[cursor] === "B") upperCaseB++;
+   }
+   return upperCaseB;
+}
+console.log(countBs("BbC"));
+
+function countChar(string, char){
+   let upperCaseChar = 0;
+   for(let cursor = 0; cursor < string.length; cursor++){
+      if(string[cursor] === char) upperCaseChar++;
+   }
+   return upperCaseChar;
+}
+console.log(countChar("BbCcC", "C"));
+console.log(countChar("kakkerlak", "k"));
