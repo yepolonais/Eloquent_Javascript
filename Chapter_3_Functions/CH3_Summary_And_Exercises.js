@@ -3,7 +3,7 @@
  * Une fonction qui ne retourne rien, ou qui contient la déclaration {return;} retourne "undefined".
  *
  * BINDINGS AND SCOPE
- * Chaque variable ou "liens" possède une portée, qui est en la région du programme dans laquelle la variable est visible.
+ * Chaque variable ou "liens" possède une portée, qui est la région du programme dans laquelle la variable est visible.
  * Une variable définie dans une fonction ou un bloc est dites LOCALE.
  * Sinon sa portée est l'ensemble du programme. La variable est dites GLOBALE.
  * Chaque fois qu'une fonction est appelée, une nouvelle instance de ses variables locales est créée. Ceci permet d'isoler son environnement de travail.
@@ -35,24 +35,24 @@
  * Si pas assez sont fournis, ceux manquants verront leur valeur définie comme "undefined"
  *
  * CLOSURE
- * Une closure ou "fermeture" est une façon un peu particulière d'utiliser les fonctions.
- * L'idée centrale est d'utiliser le fait que les fonctions ont accès au contexte dans lequel elles ont été appelées.
- * En fait, une fonction qui utilise dans son corps une variable qui provient de son contexte est une closure.
- * Un exemple d'utilisation serait une fonction closure() qui retourne une autre fonction task() + des variables locales qui sont utilisées par task().
- * Ces variables locales peuvent être décrites dans le corps de closure(), ou bien être passée en paramètre de closure().
+ * Une closure ou "fermeture" est une manière particulière d'utiliser les fonctions.
+ * L'idée centrale repose sur le fait que les fonctions ont accès aux variables du contexte dans lequel elles ont été appelées.
+ * Une closure est en fait une fonction A qui retourne une autre fonction B (mais ne l'appelle pas). Cette autre fonction B à accès aux variables locales définies dans A.
+ * Un exemple d'utilisation serait une fonction Closure() qui retourne une autre fonction Task() + des variables locales qui sont utilisées par Task().
+ * Ces variables locales peuvent être décrites dans le corps de Closure(), ou bien être passée en paramètre de Closure().
  *
  * Ex: function multiplier(factor) { return number => number * factor }
- * let twice = multiplier(2);
- * console.log(twice(5)); → 10
+ * let twice_2 = multiplier(2); // twice_2 est une closure!!
+ * console.log(twice_2(5)); → 10
  *
  * RECURSION
  * En Javascript, une récursion est en général trois fois moins performant qu'utiliser une boucle.
+ * Ceci est dû au coût lié à l'appel d'une fonction, qui est plus important qu'une simple boucle.
  * La question est de savoir quand la compréhension du code doit primer sur sa vitesse d'exécution
  *
  * FUNCTIONS AND SIDE EFFECTS
- * Une fonction pure est une fonction qui ne produit pas d'effet de bord (comme un console.log) et qui retourne toujours le même résultat lorsqu'on lui passe les mêmes paramètres
+ * Une fonction pure est une fonction qui ne produit pas d'effet de bord (comme par ex. console.log) et qui retourne toujours le même résultat lorsqu'on lui passe les mêmes paramètres
  * Elle ne s'appuie pas sur des variables globales susceptibles de changer
- *
  */
 
 /** EXERCISES */
