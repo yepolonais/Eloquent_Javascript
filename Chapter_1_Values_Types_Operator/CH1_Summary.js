@@ -12,7 +12,7 @@
  * Cette suite de chiffre forme un nombre qui peut ensuite être converti en bits
  *
  * COMPARAISON
- * Une seule valeur n'est pas égal à elle même: NaN == Nan => false (Not a number)
+ * Une seule valeur n'est pas égale à elle même: NaN == Nan => false (Not a number)
  * NaN est en effet représenter le résultat d'un calcul qui n'a pas de sens (comme par ex 0 divisé par 0).
  * Le résultat d'une opération insensée n'est pas sensé être égal au résultat d'une autre opération insensée.
  *

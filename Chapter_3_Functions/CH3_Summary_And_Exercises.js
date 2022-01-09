@@ -18,12 +18,12 @@
  *  - expression de fonction fléchée : const toto = () => { ... }
  *
  * Quelques points importants :
- *  - une variable de fonction peut être utilisée comme n'importe quelle autre variable (passage en paramètre, assignage d'une autre valeur, etc)
+ *  - une variable de fonction peut être utilisée comme n'importe quelle autre variable (passage en paramètre, assignation d'une autre valeur, etc)
  *  - une fonction déclarée avec une déclaration de fonction peut être appelée dans sa portée AVANT d'être déclarée.
  *  - les expressions de fonction fléchée permettent d'avoir une syntaxe plus courte que les expressions de fonction
  *
  * THE CALL STACK
- * Une fonction a besoin de connaître le contexte dans lequel elle a été appelée, afin de pouvoir y retourner lorsqu'elle a terminée sont traitement.
+ * Une fonction a besoin de connaître le contexte dans lequel elle a été appelée, afin de pouvoir y retourner lorsqu'elle a terminé sont traitement.
  * L'endroit dans lequel l'ordinateur stocke ce contexte est appelé la PILE DES APPELS.
  * A chaque fois qu'une fonction est appelée, son contexte est stockée sur le haut de la pile.
  * Lorsqu'elle revient, ce contexte est enlevé du haut de la pile, et est utilisé pour continuer l'exécution du programme.

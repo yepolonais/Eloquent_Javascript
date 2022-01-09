@@ -17,7 +17,7 @@
  *
  * FUNCTIONS
  * Une FONCTION est un bout de programme contenu dans une valeur. On peut appliquer cette valeur pour lancer le programme.
- * On dit que l'on invoquer, appelle ou bien applique une fonction pour l'exécuter.
+ * On dit que l'on invoque, appelle ou bien applique une fonction pour l'exécuter.
  * Une fonction peut produire ("retourner") une valeur.
  * Dans ce cas-là, l'appel à la fonction constitue une expression (ex: Math.max(2,4)), qui peut être réutilisée dans des expressions plus large.
  *

@@ -34,7 +34,7 @@
  * Par contre, les objets sont mutables car il est possible de modifier leurs propriétés.
  *
  * Quelques points importants :
- *  - une variable de fonction peut être utilisée comme n'importe quelle autre variable (passage en paramètre, assignage d'une autre valeur, etc)
+ *  - une variable de fonction peut être utilisée comme n'importe quelle autre variable (passage en paramètre, assignation d'une autre valeur, etc)
  *  - une fonction déclarée avec une déclaration de fonction peut être appelée dans sa portée AVANT d'être déclarée.
  *  - les expressions de fonction fléchée permettent d'avoir une syntaxe plus courte que les expressions de fonction
  *
