@@ -83,4 +83,36 @@ console.log(toto() === objetGlobal); // true
 
 Ici on voit bien que même l'utilisation de call(), apply() n'y font rien.
 
+*** En tant que méthode d'un objet ***
 
+Lorsqu'une fonction est appelée comme méthode d'un objet, le 'this' contenu dans la méthode correspondra à l'objet.
+L'endroit où est défini la méthode, ou bien l'ordre des propriétés n'affecte pas ce comportement.
+Ceci fonctionne aussi lorsque la méthode est contenue dans le prototype de l'objet => this fera référence à l'objet appelant, pas au prototype.
+
+// Partie sur les getters/setters zappé
+
+*** En tant que Constructeur ***
+
+Une fonction est considérée comme un constructeur lorsqu'elle est invoquée avec le mot clé "new".
+Dans ce cas, 'this' fait toujours référence à l'objet en cours de construction.
+Attention, si l'on s'amuse à retourner un objet dans le Constructeur, il sera considéré comme l'objet final.
+Toutes les propriétés définies en amont seront ignorées.
+
+function C(){
+  this.a = 37;
+}
+
+var o = new C();
+console.log(o.a); // 37
+
+*** En tant que gestionnaire d'evt DOM ***
+Pour la plupart des navigateurs, une fonction utilisée comme gestionnaire d'evt (par exemple au clic sur ma div, colorie son fond en bleu) liera son 'this' à l'objet ayant déclenché l'evt => ici la div.
+
+*** En tant que gestionnaire d'evt inline ***
+La valeur de this correspondra à l'élément DOM sur lequel le listener a été placé.
+
+<button onclick="console.log(this.tagName.toLowerCase());">
+  Afficher this
+</button>
+
+Ce code affichera le texte 'button'.
