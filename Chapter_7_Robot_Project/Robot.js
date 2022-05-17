@@ -10,6 +10,7 @@ const roads = [
 
 function buildGraph(edges) {
   let graph = {};
+
   function addEdge(from, to) {
     if (graph[from] == null) {
       graph[from] = [to];
@@ -17,6 +18,7 @@ function buildGraph(edges) {
       graph[from].push(to);
     }
   }
+
   for (let [from, to] of edges.map(r => r.split("-"))) {
     addEdge(from, to);
     addEdge(to, from);
@@ -25,4 +27,3 @@ function buildGraph(edges) {
 }
 
 var roadGraph = buildGraph(roads);
-roadGraph;

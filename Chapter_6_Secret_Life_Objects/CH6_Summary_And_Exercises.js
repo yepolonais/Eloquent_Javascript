@@ -277,3 +277,8 @@ class GroupIterator{
 for (let value of Group.from(["a", "b", "c"])) {
   value;
 }
+
+/** BORROWING A METHOD */
+
+let map = {one: 1, two: 2, hasOwnProperty: true};
+Object.prototype.hasOwnProperty.call(map, "one");
