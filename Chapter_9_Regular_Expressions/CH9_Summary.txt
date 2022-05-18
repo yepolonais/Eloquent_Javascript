@@ -16,3 +16,57 @@ La seconde notation implique de commencer et finir la regexp avec des barre obli
 ---------------------------
 *** Testing for matches ***
 ---------------------------
+Il est possible de tester ses regex en utilisant la méthode test() :
+
+console.log(/abc/.test("abcde"));
+// → true
+console.log(/abc/.test("abxde"));
+// → false
+
+--------------------------
+*** Sets of characters ***
+--------------------------
+
+/[0123456789]/ ou /[0-9]/ permet de vérfier si une chaîne de caractère contient un chiffre.
+Un trait d'union entre deux caractère indique une plage de caractère. Attention, la plage est déterminé par leur position dans le tableau Unicode!
+Il existe des expressions spéciales pour exprimer certaines plages de caractère communes :
+
+   \d	 => n'importe quelle chiffre
+   \w	 => n'importe quelle caractère alphanumérique
+   \s  => n'importe quelle espace blanc (espace, tab, nouvelle ligne, etc)
+   \D	 => n'importe quel caractère qui n'est pas un chiffre
+   \W  => n'importe quel caractère qui n'est pas alphanumérique
+   \S  => n'importe quel caractère qui n'est pas un espace blanc
+   .	 => n'importe quel caractère sauf une nouvelle ligne
+
+Pour combiner plusieurs possibilités, il faut utiliser un tableau. Par exemple [\d.] accepte n'importe quel chiffre ou un point.
+Lorsque l'on veut exclure des caractères, il faut utiliser un accent circonflexe : /[^01]/ => accepte tous sauf 0 ou 1.
+
+------------------------------------
+*** Repeating parts of a pattern ***
+------------------------------------
+Lorsque l'on souhaite répéter un shéma, par exemple rechercher une suite de chiffre, on peut utiliser le caractère spécial '+'.
+Par exemple /\d+/ fonctionne pour '123'.
+La notation /\d*/ est similaire, mais accepte aussi le cas ou la suite est vide => ''.
+Pour rechercher une suite de séquence de caractère, il faut utiliser des parenthèses => /(cou+)/ fonctionnera avec "coucoucoucou".
+
+Un point d'interrogation permet de rendre un caractère optionnel. Par exemple pour /voisin?s/, le s final est optionnel.
+
+Lorsque l'on souhaite qu'un shéma soit répété un nombre précis de fois, il faut utiliser des accolades.
+   - \d{4} indique que l'on souhaite avoir un nombre à 4 chiffre
+   - \d{2,5} indique que l'on souhaite avoir un nombre entre 2 et 5 chiffres.
+
+-------------------------
+*** Maches and Groups ***
+-------------------------
+
+La méthode test() des regex renvoie simplement si la recherche aboutit. D'autres fonctions existent, comme par exemple exec().
+Cette méthode retourne la chaîne de caractère trouvée qui colle à la regex, ainsi que sa position dans la chaîne initiale.
+
+let match = /\d+/.exec("one two 100");
+console.log(match);
+// → ["100"]
+console.log(match.index);
+// → 8
+
+
