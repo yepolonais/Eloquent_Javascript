@@ -1,0 +1,18 @@
+-------------------------------------
+*** Creating a regular expression ***
+-------------------------------------
+
+Une expression régulière est un objet. Elle peut être créée de deux manières :
+
+let re1 = new RegExp("abc");
+let re2 = /abc/;
+
+Les deux variables représente un a, suivi d'un b, suivi d'un c.
+Le constructeur RegExp permet d'écrire la regexp sous la forme d'une chaîne de caractère.
+
+La seconde notation implique de commencer et finir la regexp avec des barre obliques = slashs. Si l'on veut intégrer des slashs à notre regexp, il faut alors l'échapper (avec un backslash). Ceci est vrai également pour les caractères spéciaux : points d'interrogation, signe plus, etc.
+
+
+---------------------------
+*** Testing for matches ***
+---------------------------

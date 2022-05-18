@@ -1,0 +1,74 @@
+-------------------
+*** STRICT MODE ***
+-------------------
+
+Lorsque l'on place 'use strict' en haut d'un fichier ou d'une fonction, on peut rendre JS moins permissif.
+Par exemple, lorsque l'on oublie de placer let, var ou const devant une variable, JS créé une variable globale.
+En mode strict, une exception sera retournée.
+De plus, la valeur de this vaudra undefined dans des fonctions qui ne sont pas appelées comme des méthodes.
+Ou bien si l'on oublie d'utiliser le mot clé 'new'.
+
+------------
+*** TYPE ***
+------------
+
+JS regarde les types uniquement lorsqu'il se lance. De plus, il pratique la coercition de type.
+Il existe des solutions pour forcer des types dans JS, comme par exemple utiliser Typescript.
+
+-------------------
+*** EXCEPTIONS ***
+-------------------
+
+Lorsqu'une exception est retournée par JS, il est possible de la récupérer dans un bloc try{} catch{} finally{}.
+
+--------------------------
+*** SELECTIVE CATCHING ***
+--------------------------
+
+Différent type d'erreurs peuvent être interceptées dans un bloc catch.
+Il est possible de créer des erreurs customs, puis de les lier à un bloc de code afin de pointer quand ce bloc plante.
+
+class InputError extends Error {}
+
+function promptDirection(question) {
+  let result = prompt(question);
+  if (result.toLowerCase() == "left") return "L";
+  if (result.toLowerCase() == "right") return "R";
+  throw new InputError("Invalid direction: " + result);
+}
+
+La déclaration de notre Exception custom est très simple et tient en une ligne.
+Il est maintenant possible de séparer nos erreurs dans le bloc catch en utilisant l'opérateur 'instanceof' :
+
+for (;;) {
+  try {
+    let dir = promptDirection("Where?");
+    console.log("You chose ", dir);
+    break;
+  } catch (e) {
+    if (e instanceof InputError) {
+      console.log("Not a valid direction. Try again.");
+    } else {
+      throw e;
+    }
+  }
+}
+
+------------------
+*** ASSERTIONS ***
+------------------
+
+Les assertions sont un bloc d'instructions qui permettent d'aider les développeurs à utiliser correctement une fonction / un service.
+
+function firstElement(array) {
+  if (array.length == 0) {
+    throw new Error("firstElement called with []");
+  }
+  return array[0];
+}
+
+Si un développeur passe un tableau vide à firstElement, une erreur significative sera retournée.
+Les assertions sont extrêmement utiles, mais doivent être utilisées avec parcimonie pour ne pas alourdir le code.
+Idéalement, il faut les ajouter lorsque l'on a déjà fait l'erreur - ou bien si des cas de mauvaise utilisation sont prévisibles.
+
+
