@@ -56,9 +56,9 @@ Lorsque l'on souhaite qu'un shéma soit répété un nombre précis de fois, il 
    - \d{4} indique que l'on souhaite avoir un nombre à 4 chiffre
    - \d{2,5} indique que l'on souhaite avoir un nombre entre 2 et 5 chiffres.
 
--------------------------
-*** Maches and Groups ***
--------------------------
+--------------------------
+*** Matches and Groups ***
+--------------------------
 
 La méthode test() des regex renvoie simplement si la recherche aboutit. D'autres fonctions existent, comme par exemple exec().
 Cette méthode retourne la chaîne de caractère trouvée qui colle à la regex, ainsi que sa position dans la chaîne initiale.
@@ -69,4 +69,15 @@ console.log(match);
 console.log(match.index);
 // → 8
 
+Il est possible de rechercher des sous-groupes, avec l'utilisation de parenthèses.
+Par exemple la regex /bad(ly)?/ va rechercher la chaine bad, optionnellement badly.
+La méthode exec) retournera alors la chaîne trouvée 'badly', et le groupe 'ly'.
+Dans le cas où plusieurs groupe 'ly' serait présent, seul le dernier serait retourné :
 
+/bad(ly)?/.exec("badly") => ['badly', 'ly', index: 0, input: 'badly', groups: undefined]
+
+Les groupes peuvent être utiles pour extraire une partie d'une chaîne de caractère, et l'utiliser à d'autre fins!
+
+----------------------
+*** The date class ***
+----------------------
