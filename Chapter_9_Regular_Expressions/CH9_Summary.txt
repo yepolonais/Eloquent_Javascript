@@ -81,3 +81,62 @@ Les groupes peuvent être utiles pour extraire une partie d'une chaîne de carac
 ----------------------
 *** The date class ***
 ----------------------
+JS possède une classe pour représenter un point dans le temps - Date.
+
+console.log(new Date());
+// → Mon Nov 13 2017 16:19:11 GMT+0100 (CET)
+
+Il est possible de créér un objet Date à une date spécifique.
+Attention, les mois commence à l'index 0, tandis que les jours débutent à l'index 1.
+
+console.log(new Date(2009, 11, 9, 12, 59, 59, 999));
+// → Wed Dec 09 2009 12:59:59 GMT+0100 (CET)
+
+En plaçant judicieusement ses groupes au sein de la regex, il est possible d'en extraire un objet Date :
+
+function getDate(string) {
+  let [_, month, day, year] =
+    /(\d{1,2})-(\d{1,2})-(\d{4})/.exec(string);
+  return new Date(year, month - 1, day);
+}
+console.log(getDate("1-30-2003"));
+// → Thu Jan 30 2003 00:00:00 GMT+0100 (CET)
+
+----------------------------------
+*** Word and String Boundaries ***
+----------------------------------
+Il est possible d'utiliser les marqueurs :
+   - ^ pour marquer le début de la cible;
+   - $ pour marquer la fin de la cible.
+
+Ainsi, l'expression régulière /^\d+$/ implique une suite de chiffre entre le début et la fin de la cible. Si la cible est composé d'un seul chiffre, ou bien possède un caractère autre qu'un chiffre, la regex ne fonctionnera pas.
+
+Un autre marqueur utile est \b. Il permet de marquer la transition entre un caractère alphanumérique et un caractère non alphanumérique. Il est surtout utilisé pour marquer le début ou la fin d'un mot.
+
+console.log(/cat/.test("concatenate"));
+// → true
+console.log(/\bcat\b/.test("concatenate"));
+// → false
+
+La seconde expression régulière ne fonctionne pas à cause du second \b.
+
+-----------------------
+*** Choice patterns ***
+-----------------------
+
+Lorsque l'on souhaite que plusieurs choix soit possible sur notr eregex, il faut utiliser des pipes.
+Par exemple, la regex /\b\d+ (pig|cow|chicken)s?\b/ recherche un nombre, suivi d'un espace, suivi d'un des trois mots pig, cow ou chicken, éventuellement au pluriel.
+
+---------------------------------
+*** The Mechanics of Matching ***
+---------------------------------
+
+Lorsque l'on utilise les méthodes exec() ou test(), le moteur de regex essaie de trouver une correspondance dans notre cible en débutant par le premier caractère, puis le second, etc.
+
+De plus, pour une regex = /^.*X/ (=> une cible qui début par n'importe quelle caractère sauf new line, répété 0 ou plusieurs fois, et qui se termine par un x).
+
+Si on lui passe la cible "aaXaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", le moteur de regex va commencer par appliquer .* sur toute la cible, avant de se rendre compte qu'elle a besoin d'un X final. Elle va alors revenir en arrière d'un cran, et ainsi de suite, jusqu'à tomber sur le X en troisième position. Ce mécanisme de retour en arrière peut entraîner une consommation importante des ressources lorsque la regex n'est pas assez précise.
+
+--------------------------
+*** The Replace Method ***
+--------------------------
