@@ -1,35 +1,40 @@
+/** REGEXP GOLF */
 
-// recherche
-let regex = /'[^']*'/;
-
-regex.exec("She said 'hello'");
-
-
-let notBinary = /[^01]+/;
-notBinary.exec("1100100010100110");
-// → false
-notBinary.exec("1100220010200110");
-// → true
-
-/bad(ly)?/.exec("badly")
-
-function getDate(string) {
-  let [_, month, day, year] = /(^\d{1,3})-(\d{1,2})-(\d{4})/.exec(string);
-  return new Date(year, month - 1, day);
+function verify(regexp, yes, no) {
+  // Ignore unfinished exercises
+  if (regexp.source == "...") return;
+  for (let str of yes){
+    regexp.test(str);
+  }
+  for (let str of no) {
+    regexp.test(str);
+  }
 }
 
-getDate("100-1-30000");
+// verify(/ca[rt]/,
+//        ["my car", "bad cats"],
+//        ["camper", "high art"]);
 
+// verify(/pr?op/,
+//        ["pop culture", "mad props"],
+//        ["plop", "prrrop"]);
 
-let regex2 = /^\d$/;
-regex2.test('100000')
+// verify(/ferr(et|y|ari)/,
+//        ["ferret", "ferry", "ferrari"],
+//        ["ferrum", "transfer A"]);
 
-let animalCount = /^\d+ (pig|cow|chicken)s?\b/;
-animalCount.test("15 pigs ");
-animalCount.test("15 pigchickens");
+// verify(/ious\b/,
+// ["how delicious", "spacious room"],
+// ["ruinous", "consciousness"]);
 
-let myRegex = /^.*/;
+// verify(/\s[\.,:;]/,
+//        ["bad punctuation ."],
+//        ["escape the period"]);
 
-myRegex.exec("abc")
+// verify(/\w{7}/,
+//        ["Siebentausenddreihundertzweiundzwanzig"],
+//        ["no", "three small words"]);
 
-"j'arrive à pied par la chine".replace(/(p) (ch)/, "$2 $1");
+verify(/\b[^\We]+\b/i,
+       ["red platypus", "wobbling nest"],
+       ["earth bed", "learning ape", "BEET"]);
