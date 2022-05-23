@@ -103,6 +103,93 @@ Pour utiliser notre module, il suffirait d'utiliser le code suivant:
 
 const {formatDate} = require("./format-date");
 
-console.log(formatDate(new Date(2017, 9, 13),
-                       "dddd the Do"));
+console.log(formatDate(new Date(2017, 9, 13), "dddd the Do"));
 // → Friday the 13th
+
+Require peut être défini dans sa forme la plus minimaliste au code suivant :
+
+require.cache = Object.create(null);
+
+function require(name) {
+  if (!(name in require.cache)) {
+    let code = readFile(name);
+    let module = {exports: {}};
+    require.cache[name] = module;
+    let wrapper = Function("require, exports, module", code);
+    wrapper(require, module.exports, module);
+  }
+  return require.cache[name].exports;
+}
+
+Require lit le code qu'on lui passe sous forme de string. Ce code doit posséder les variables require, exports et module, car on va lui passer avec le Constructeur Function(), afin de lui créer un scope local. Require renvoie la prop 'exports' du module chargé.
+
+Afin d'éviter de charger plusieurs fois le même module, 'require' garde en mémoire les modules déjà chargés.
+Le cas du package 'ordinal' est particulier car il expose une fonction, pas un objet. En fait il est possible de surcharger module.exports avec la valeur que l'on souhaite - par ex une fonction. De nombreux modules utilisent ce trick pour renvoyer une valeur unique à la place d'un objet.
+
+La façon dont la chaîne de caractère passée à require est interprétée dépend du système. En général le préfixe "./" ou "../" est interprété comme un chemin relatif au fichier qui appelle require.
+Lorsque le nom n'est pas relatif, un système tel que Node.js cherchera dans ses packages installés.
+
+--------------------------
+*** EcmaScript Modules ***
+--------------------------
+
+CommonJS fonctionne plutôt bien. Toutefois n'étant pas natif, on peut le vois comme une solution de rafistolage.
+La notation est un peu bizarre - les elts que l'on ajoute à exports ne sont pas disponibles dans le scope local par ex.
+De plus require est une fonction qui peut prendre n'importe quel type d'arguments - et pas juste une chaîne de caractère, il est difficile de connaître les dépendances d'un module, à moins de lancer son code.
+
+C'est pourquoi ECMAScript a lancé son propre système de modules avec ES2015, appelés 'ES modules'.
+Le concept de dépendances et d'interfaces est similaire, seul les détails diffèrent.
+Le chargement d'un module se fait via le mot spécial 'import' intégré au langage - et pas une fonction comme require.
+Le mot clé 'export' permet d'exporter les éléments suivants : fonction, classe, variable.
+
+import ordinal from "ordinal";
+import {days, months} from "date-names";
+
+export function formatDate(date, format) { /* ... */ }
+
+L'interface d'un module ES ne se limite pas à une simple valeur, mais à une collection de bindings.
+Ceci implique que lorsque l'on modifie la valeur d'un binding dans notre module, les modules tiers qui utilise ce binding verront la mise à jour automatiquement.
+
+Lorsqu'un binding possède le préfixe default, il sera chargé par défaut si l'on importe sans accolade le binding du module => import ordinal from "ordinal".
+Il est toujours possible d'importer d'autre bindings de ce module.
+
+Il est possible de renommer un binding à la volée avec le mot clé 'as':
+
+import {days as dayNames} from "date-names";
+
+console.log(dayNames.length);
+// → 7
+
+Une autre différence importante est que l'import des modules ES intervient avant que le code du module qui importe soit lancé.
+Cela implique que l'import ne peut être effectué dans une fonction ou blocs de code. De plus, le nom des dépendances doivent être des chaînes de caractère, et pas des expressions arbitraires.
+
+Les modules ES étant relativement récent, leur utilisation / incorporation est en cours dans la communauté JS et cohabite avec CommonJS.
+
+-----------------------------
+*** Building and Bundling ***
+-----------------------------
+
+Il existe un nombre importants d'extension qui sont en avance sur le langage. Certaines ne sont même pas techniquement codée en JS.
+Pour les faire fonctionner, leur code est compilé et traduit en JS actuel - voire ancien pour le faire fonctionner sur des navigateurs moisis.
+
+Il existe un problème avec le fractionnement d'une application en module - charger un seul gros fichier est plus rapide que charger plein de petits fichiers. C'est pourquoi les dev utilisent des 'bundlers' pour compresser leurs fichiers en un seul avant de le publier sur le net.
+
+La taille des fichiers détermine également la vitesse à laquelle ils seront transférés sur le net => 'minifiers'. Ces derniers retirent les commentaires et les espaces blancs, renomme les bindings, remplacent des bouts de code par d'autre qui prennent moins de place.
+
+Après avoir été traduit en JS, unifié par un bundler, puis minifié, le code que l'on extrait de NPM ne ressemble plus vraiment au code originel.
+
+---------------------
+*** Module Design ***
+---------------------
+Lorsque l'on design un module, l'idéal est de créer une interface simple qui peut être utilisé dans des cas généraux.
+L'idéal est d'exposer une fonction.
+
+La tradition de la POO a entraîné la création de nombreux modules, qui demande de créer un certain type d'objet, charger le module dans cet objet, puis utiliser des méthodes spécialisées pour obtenir le résultat escompté.
+Cet approche est mauvaise car cela implique de modifier l'état de l'objet de nombreuses fois. De plus, comme les données sont imbriquées dans un objet typé, tout code qui voudra utiliser ces données devra connaître le type de l'objet, ce qui créé des interdépendances indésirables.
+
+Il est des fois impossible de faire autrement que de définir un objet pour faire fonctionner son code. Mais si l'on peut utiliser un tableau, il ne faut pas hésiter!
+
+
+
+
+
