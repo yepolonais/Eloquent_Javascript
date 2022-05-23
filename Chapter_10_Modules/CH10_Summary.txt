@@ -1,0 +1,108 @@
+
+Il peut être tentant de créer un programme où tout les éléments sont profondemment emmêlés.
+On appelle ce type de programme une 'grosse boule de boue' (big ball of mud). Lorsque l'on essaie de sortir une pièce de ce programme, tout s'écroule. Il est plus 'simple' de tout réécrire.
+
+---------------
+*** Modules ***
+---------------
+Les modules ont été créés pour structurer non applications. Il s'agit d'une pièce de code qui spécifie de quelles autres modules il dépend, et quelle interface il expose (aux autres modules).
+On peut voir ces modules comme des pièces d'un LEGO.
+Les relations entre ces modules sont appelés des dépendances. Lorsque ces dépendances sont explicitement indiquées dans le module, elle peuvent être téléchargées automatiquement lorsque l'on ajoute le module.
+Afin que ce ces modules n'interfèrent pas entre eux, ils doivent posséder chacun leur scope privé.
+
+---------------
+*** Pakages ***
+---------------
+Un package est un bout de code qui peut être distribué - ie copié et installé. Il peut contenir un ou plusieurs modules, et indique s'il dépend d'autre package. En général il contient de la documentation pour expliquer son fonctionnement.
+Losqu'un problème est detecté sur un package, ou bien qu'une nouvelle fonctionnalité est ajoutée, el package est mis à jour.
+Afin de pouvoir suivre les mises à jour de ces packages, un gestionnaire de package est nécessaire. Pour JS, il s'agit de NPM.
+La plupart des packages distribués sur NPM possèdent une licence particulière qui permet à d'autres personnes de les utiliser.
+
+--------------------------
+*** Improvised Modules ***
+--------------------------
+Jusqu'à 2015, JS ne possédait pas de système de module intrinsèque.
+Les développeurs ont donc créé leur propre manière de construire des modules.
+Il est possible d'utiliser les fonctions JS pour créer des scope locaux privés, et des objets pour simuler une interface.
+
+Voici un exemple de module qui permet d'obtenir le nom ou la numéro d'un jour de la semaine :
+
+const weekDay = function() {
+  const names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  return {
+    name(number) { return names[number]; },
+    number(name) { return names.indexOf(name); }
+  };
+}();
+
+console.log(weekDay.name(weekDay.number("Sunday")));
+// → Sunday
+
+weekDay est une IIFE qui retourne un objet (son interface) contenant les deux fonctions permettant d'obtenir le nom ou le numéro du jour de la semaine. Sa variable locale names[] est inaccessible en dehors de weekDay - et donc elle est bien isolée.
+
+Ce type de code a été utilisé pendant longtemps - mais il est maintenant obsolète. Il n'est pas idéal car il ne permet pas au module de déclarer ses dépendances. Il place juste son interface dans le scope global, et attend des autres modules de procéder de même.
+Afin de pouvoir intégrer les dépendances aux modules, il faut pouvoir exécuter des chaînes de caractère comme étant du code - ce que JS sait faire.
+
+-------------------------------
+*** Evaluating data as code ***
+-------------------------------
+Il existe plusieurs possibilités pour convertir un bout de code, sous la forme d'une chaîne de caractère, en code exécutable par notre application.
+
+La plus directe est l'opérateur spécial 'eval':
+
+const x = 1;
+function evalAndReturnX(code) {
+  eval(code);
+  return x;
+}
+
+console.log(evalAndReturnX("var x = 2"));
+// → 2
+
+Ce dernier est toutefois dangereux, comme observé dans le code ci-dessus. On s'attendrait à ce que evalAdnReturnX retourne la constante x qui vaut 1. Or on peut injecter une variable x dans la fonction qui aura la priorité sur notre constante.
+
+Une autre possibilité est d'utiliser le constructeur Function. Ce dernier prend deux arguments :
+   - une chaîne de caractère contenant une liste d'arguments séparés par des virgules ;
+   - une chaîne de caractère contenant le corps de la fonction.
+Function encapsule le code dans une valeur de fonction, possédant ainsi son propre scope.
+
+
+let plusOne = Function("n", "return n + 1;");
+console.log(plusOne(4));
+// → 5
+
+----------------
+*** CommonJS ***
+----------------
+L'approche la plus répandue pour utiliser les modules est appelé CommonJS.
+Elle est utilisée par Node.js, et par la plupart des packages de NPM.
+Le concept central est l'utilisation de la fonction 'require', qui permet lorsqu'on l'utilise avec le nom d'un module de charger ce dernier et de retourner son interface.
+Elle encapsule le module dans une fonction afin qu'il possède son propre scope local.
+Pour que cela fonctionne, le module doit :
+   - appeler 'require' afin d'accéder à ses dépendances
+   - placer son interface dans un objet lié à 'exports'
+
+Voici un exemple de module qui permet de formater une date. Il utiliser deux packages de NPM - ordinal et datenames, et exporte une seule fonction formatDate().
+
+const ordinal = require("ordinal");
+const {days, months} = require("date-names");
+
+exports.formatDate = function(date, format) {
+  return format.replace(/YYYY|M(MMM)?|Do?|dddd/g, tag => {
+    if (tag == "YYYY") return date.getFullYear();
+    if (tag == "M") return date.getMonth();
+    if (tag == "MMMM") return months[date.getMonth()];
+    if (tag == "D") return date.getDate();
+    if (tag == "Do") return ordinal(date.getDate());
+    if (tag == "dddd") return days[date.getDay()];
+  });
+};
+
+L'interface exposé par ordinal est une simple fonction. date-names expose un object contenant plusieurs prop - days et months.
+Pour utiliser notre module, il suffirait d'utiliser le code suivant:
+
+const {formatDate} = require("./format-date");
+
+console.log(formatDate(new Date(2017, 9, 13),
+                       "dddd the Do"));
+// → Friday the 13th
