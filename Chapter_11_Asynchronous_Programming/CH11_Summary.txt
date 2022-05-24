@@ -1,0 +1,76 @@
+
+Lorsque l'on traite un bout de code tel qu'une boucle qui manipule des nombres, la vitesse à laquelle le code sera effectué dépends directement de la puissance du processeur de nos ordinateurs.
+Toutefois, de nombreux programmes interagissent avec des entités extérieures, comme par exemple communiquer sur un réseau, ou bien lire/écrire des données sur un disque dur.
+Dans ce cas, le processeur reste inactif en attendant le retour de la requête. Nos OS se chargent en général de réattribuer une tâche au processeur pour traiter d'autres programmes.
+Mais cela ne permet pas à notre programme d'avancer.
+
+----------------------
+*** Asynchronicity ***
+----------------------
+
+Dans un programme synchrone, les choses arrivent l'une après l'autre.
+Dans un programme asynchrone, plusieurs actions peuvent être lancées en même temps.
+
+En mode synchrone, il est possible de diviser les tâches sur plusieurs threads d'exécution. Nos processeurs disposent en effet de plusieurs coeurs, qui peuvent eux-mêmes exécuter plusieurs threads.
+Ceci implique de devoir recombiner le travail de ces threads pour pouvoir continuer l'exécution du programme à un moment. La programmation multithread est notoirement compliqué à appréhender.
+
+En mode synchrone, un seul thread peut lancer plusieurs tâches en parallèle.
+
+-----------------
+*** Crow tech ***
+-----------------
+L'auteur délire sur la capacité des corbeaux à construire des nids qui peuvent communiquer entre eux à l'aide d'objets qui reflètent la lumière.
+
+-----------------
+*** Callbacks ***
+-----------------
+La première approche pour travailler en asynchrone est de passer une fonction de callback à notre action. C'est le cas de la fonction setTimeout :
+
+setTimeout(() => console.log("Tick"), 500);
+
+Cette fonction peut être utile pour mettre à jour une animation, ou bien créer une sortie de secours lorsqu'une requête prend trop de temps.
+Il est possible d'effectuer des callbacks successifs pour effectuer une chaîne d'actions.
+Ce style de programmation fonctionne, mais peux devenir lourd sachant que le niveau d'indentation augmente à chaque nouveau callback.
+
+Il est tout à fait possible de créer sa propre fonction asynchrone. Pour cela il suffit de créer une fonction A, qui prend en argument une autre fonction B. La fonction B est appelée à la fin du traitement de la fonction A, pour indiquer que le traitement est terminé!
+
+Dans un certain sens, l'asynchronicité est contagieuse. Très souvent, une fonction synchrone qui appelle une fonction asynchrone doit elle-même devenir asynchrone pour conserver l'intérêt de la technique.
+
+-----------------
+*** Promises ***
+-----------------
+Il est parfois plus simple de travailler avec des concepts abstraits quand ces derniers peuvent être résumés à une valeur.
+Pour une action asynchrone, au lieu de s'arranger pour qu'une fonction soit appelée dans le futur, il peut être intéressant de retourner directement un objet qui représente cet évenement futur. C'est ce que fait la classe Promise.
+
+Une promesse est une action asynchrone, qui peut être complétée à un moment et produire une valeur à ce moment là. Elle est capable de notifier quand sa valeur est disponible.
+
+La manière la plus simple pour créer une promesse est d'utiliser Promise.resolve. Cette méthode s'assure que la valeur qu'on lui donne est encapsulée dans une promesse. S'il s'agit déjà d'une promesse, elle est simplement retournée. Sinon, on obtient une nouvelle promesse qui se termine immédiatemment avec notre valeur comme résultat.
+
+let fifteen = Promise.resolve(15);
+fifteen.then(value => console.log(`Got ${value}`));
+// → Got 15
+
+Pour obtenir le résultat d'une promesse, on peut utiliser la méthode then(). Then() enregistre une fonction de callback, qui est appelée lorsque la promesse se termine et produit une valeur. Il est possible d'ajouter plusieurs callbacks à une unique promesse, qui seront appelés même si on les ajoute après que la promesse se soit déjà terminée.
+
+Then() retourne une promesse également, qui produit la valeur que la fonction de callback retourne. Si cette fonction de callback retourne une promesse, then() retournera la valeur produite par cette promesse une fois cette dernière terminée.
+
+Pour créer une promesse, on peut utiliser le constructeur Promise. Son interface est un peu bizarre - le constructeur attend une fonction en argument qui est appelée immédiatemment et qui retourne une autre fonction utilisée pour résoudre la promesse.
+L'intérêt pas rapport à Promise.resolve() est ...
+Voici la fonction appliquée à nos corbeaux
+
+function storage(nest, name) {
+  return new Promise(resolve => {
+    nest.readStorage(name, result => resolve(result));
+  });
+}
+
+storage(bigOak, "enemies")
+  .then(value => console.log("Got", value));
+
+En fin de compte, cela permet de transférer la fonction de callback dans le then(), en lui passant en paramètre le résultat de notre action!
+
+----------------
+*** Failure ***
+----------------
+
+
