@@ -98,7 +98,7 @@ exports.formatDate = function(date, format) {
   });
 };
 
-L'interface exposé par ordinal est une simple fonction. date-names expose un object contenant plusieurs prop - days et months.
+L'interface exposé par ordinal est une simple fonction. date-names expose un objet contenant plusieurs props - days et months.
 Pour utiliser notre module, il suffirait d'utiliser le code suivant:
 
 const {formatDate} = require("./format-date");
