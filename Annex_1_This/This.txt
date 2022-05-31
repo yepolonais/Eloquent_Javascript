@@ -1,12 +1,16 @@
 Le comportement du mot clé this est particulier en JS.
 
+-----------------------
 *** Contexte global ***
+-----------------------
 
 Dans le contexte global d'exécution (donc hors de toute fonction), 'this' fait référence à l'objet global.
 Pour un navigateur, il d'agira de l'objet {window}.
 Il est notable que cet objet global est accessible que que soit le contexte d'exécution avec 'globalThis'.
 
+-------------------------------
 *** Contexte d'une fonction ***
+-------------------------------
 
 Si 'this' est utilisé dans une fonction, alors sa valeur variera en fonction de l'endroit où la fonction a été appelé.
 
@@ -32,7 +36,9 @@ f2() === undefined; // true
 
 f2() retourne "undefined". Pour que f2() retourne window, il aurait fallu écrire window.f2()!
 
+---------------------
 *** Call et Apply ***
+---------------------
 
 Lorsque le mot clé 'this' est utilisé dans le corps d'une fonction, il est possible de lier this à un objet lambda en utilisant les méthodes call() ou apply().
 
@@ -50,7 +56,9 @@ var o = {a:1, b:3};
 ajout.call(o, 5, 7); // 1 + 3 + 5 + 7 = 16
 ajout.apply(o, [10, 20]); // 1 + 3 + 10 + 20 = 34
 
+-----------------------
 *** La méthode Bind ***
+-----------------------
 
 La méthode bind() permet de créer une nouvelle fonction à partir de la fonction originel, qui possède le même corps et la même portée, mais dont 'this' est lié au premier argument passé à bind().
 
@@ -64,7 +72,10 @@ console.log(g()); // azerty
 var h = g.bind({a:"coucou"}); // bind ne fonctionne qu'une seule fois!
 console.log(h()); // azerty
 
+-------------------------
 *** Fonction fléchées ***
+-------------------------
+
 Les fonctions fléchées sont particulières : 'this' dans la fonction fléchée sera toujours égal à la valeur du 'this' du contexte où la fonction fléchée a été définie.
 Par exemple s'il s'agit du contexte global :
 
@@ -83,7 +94,9 @@ console.log(toto() === objetGlobal); // true
 
 Ici on voit bien que même l'utilisation de call(), apply() n'y font rien.
 
+--------------------------------------
 *** En tant que méthode d'un objet ***
+--------------------------------------
 
 Lorsqu'une fonction est appelée comme méthode d'un objet, le 'this' contenu dans la méthode correspondra à l'objet.
 L'endroit où est défini la méthode, ou bien l'ordre des propriétés n'affecte pas ce comportement.
@@ -91,7 +104,9 @@ Ceci fonctionne aussi lorsque la méthode est contenue dans le prototype de l'ob
 
 // Partie sur les getters/setters zappé
 
+--------------------------------
 *** En tant que Constructeur ***
+--------------------------------
 
 Une fonction est considérée comme un constructeur lorsqu'elle est invoquée avec le mot clé "new".
 Dans ce cas, 'this' fait toujours référence à l'objet en cours de construction.
@@ -105,10 +120,16 @@ function C(){
 var o = new C();
 console.log(o.a); // 37
 
+------------------------------------------
 *** En tant que gestionnaire d'evt DOM ***
+------------------------------------------
+
 Pour la plupart des navigateurs, une fonction utilisée comme gestionnaire d'evt (par exemple au clic sur ma div, colorie son fond en bleu) liera son 'this' à l'objet ayant déclenché l'evt => ici la div.
 
+---------------------------------------------
 *** En tant que gestionnaire d'evt inline ***
+---------------------------------------------
+
 La valeur de this correspondra à l'élément DOM sur lequel le listener a été placé.
 
 <button onclick="console.log(this.tagName.toLowerCase());">
@@ -116,3 +137,22 @@ La valeur de this correspondra à l'élément DOM sur lequel le listener a été
 </button>
 
 Ce code affichera le texte 'button'.
+
+----------------------------------
+*** Cas spécifique des Classes ***
+----------------------------------
+
+Lorsque l'on souhaite créer des objets, et que l'on souhaite que le 'this' dans les props et méthodes fasse toujours référence à l'instance de l'objet qui a été créé, il faut utiliser le mot clé 'class' qui permet de forcer l'utilisation de 'new' lors de la création de l'objet, et utiliser des fonctions fléchées pour les méthodes pour que le 'this' dans ces méthodes soit bindés à l'instance de l'objet.
+
+class QosQualityRate extends BaseTimeSeriesChart {
+        constructor(options) {
+            super(options);
+            this.correction = {
+                slope: 1,
+                offset: 0
+            };
+        }
+
+        getData = (samples) => {}
+
+

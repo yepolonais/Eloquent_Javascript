@@ -43,8 +43,8 @@
  *
  * Les prototypes peuvent être comparés à la notion de classes, que l'on trouve dans d'autres langage comme Java ou C#.
  * Une classe définie les propriétés et méthodes que l'on peut retrouver dans un objet.
- * En JS, les prototypes sont utiles pour définir des propriétés qui sont partagées par toutes les instances d'une classe => les méthdodes par exemple.
- * Les propriétés qui diffèrent suivant l'instance de l'objet doivent être définie directement dans l'objet.
+ * En JS, les prototypes sont utiles pour définir des propriétés qui sont partagées par toutes les instances d'une classe => les méthodes par exemple.
+ * Les propriétés qui diffèrent suivant l'instance de l'objet doivent être définies directement dans l'objet.
  * Pour cela on utilise des fonctions appelées des constructeurs :
  *
  * function makeRabbit(type) {
