@@ -72,5 +72,50 @@ En fin de compte, cela permet de transférer la fonction de callback dans le the
 ----------------
 *** Failure ***
 ----------------
+Lorsque l'on utilise des callbacks pour réaliser du code asynchrone, la convention veut que le premier argument de la fonction de callback soit utilisé pour indiquer que l'action a échoué, tandis que le second argument contient la valeur produite par l'action réussie (NB : ne serait ce par l'inverse?). La fonction de callback doit s'assurer que les erreurs qu'elle reçoit, soit par son argument ou par des fonctions qu'elle appelerait, soit catchées et traités par la fonction adequate.
 
+Les promesses rendent le processus plus facile. Elle sont soit résolues - l'action a réussi - ou bien rejetées - l'action a échoué. Lorsqu'une promesse est rejetée, elle ne peut être captée que par un bloc catch(). catch() retourne une nouvelle promesse, qui se résout à la valeur de la promesse originel si aucun souci n'est reporté, ou alors se résout à la valeur de la fonction passée au catch.
 
+Il est aussi possible de passer un callback en second argument à then(), qui effectuera la même tache qu'un catch() et peut se combiner avec ce dernier.
+Le constructeur Promise accepte également un second argument qu'il peut utiliser pour rejeté la promesse :
+
+new Promise((_, reject) => reject(new Error("Fail")))
+  .then(value => console.log("Handler 1"))
+  .catch(reason => {
+    console.log("Caught failure " + reason);
+    return "nothing";
+  })
+  .then(value => console.log("Handler 2", value));
+// → Caught failure Error: Fail
+// → Handler 2 nothing
+
+Ici le handler passé à la promesse la rejette dans tous les cas en lui passant une Erreur : Fail. On passe directement dans le bloc catch,  qui va retourner "nothing". Il est intéressant de voir que l'on peut continuer en récupérant la valeur produite par le bloc catch dans un bloc then() (cad "nothing") et le réutiliser.
+
+-------------------------
+*** Networks are hard ***
+-------------------------
+
+Il arrive qu'aucune réponse ne soit fourni à notre requête. Dans ce cas, il peut être judicieux de renvoyer la requête automatiquement un certain nombre de fois avant d'abandonner.
+
+class Timeout extends Error {}
+
+function request(nest, target, type, content) {
+  return new Promise((resolve, reject) => {
+    let done = false;
+    function attempt(n) {
+      nest.send(target, type, content, (failed, value) => {
+        done = true;
+        if (failed) reject(failed);
+        else resolve(value);
+      });
+      setTimeout(() => {
+        if (done) return;
+        else if (n < 3) attempt(n + 1);
+        else reject(new Timeout("Timed out"));
+      }, 250);
+    }
+    attempt(1);
+  });
+}
+
+lire https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Using_promises
