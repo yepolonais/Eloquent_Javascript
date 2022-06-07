@@ -34,7 +34,7 @@ Ce style de programmation fonctionne, mais peux devenir lourd sachant que le niv
 
 Il est tout à fait possible de créer sa propre fonction asynchrone. Pour cela il suffit de créer une fonction A, qui prend en argument une autre fonction B. La fonction B est appelée à la fin du traitement de la fonction A, pour indiquer que le traitement est terminé!
 
-Dans un certain sens, l'asynchronicité est contagieuse. Très souvent, une fonction synchrone qui appelle une fonction asynchrone doit elle-même devenir asynchrone pour conserver l'intérêt de la technique.
+Dans un certain sens, l'asynchronicité est contagieuse. Très souvent, une fonction synchrone qui appelle une fonction asynchrone doit elle-même devenir asynchrone pour libérer le thread. Sinon le thread restera bloqué à l'appel de la fonction asynchrone.
 
 -----------------
 *** Promises ***
