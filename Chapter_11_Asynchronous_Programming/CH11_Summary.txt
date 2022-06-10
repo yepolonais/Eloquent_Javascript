@@ -36,6 +36,18 @@ Il est tout à fait possible de créer sa propre fonction asynchrone. Pour cela 
 
 Dans un certain sens, l'asynchronicité est contagieuse. Très souvent, une fonction synchrone qui appelle une fonction asynchrone doit elle-même devenir asynchrone pour libérer le thread. Sinon le thread restera bloqué à l'appel de la fonction asynchrone.
 
+Voici un exemple simple de callback :
+
+function doLongStuff(param_1, action){
+  requestDB(param_1);
+  action();
+}
+
+L'appel de la fonction est effectuée ainsi:
+doLongStuff("trucARequeter", () => console.log("OK"));
+
+requestDB() étant synchrone, l'appel à la fonction action() sera effectuée lorsque lorsque cette requête aura retournée. Il est possible d'enchaîner les callbacks de la sorte.
+
 -----------------
 *** Promises ***
 -----------------
