@@ -1,0 +1,115 @@
+
+A la base, JSDoc permet de générer de la documentation pour notre code Javascript.
+De mon point de vue, il est aussi très utile pour effectuer de la complétion de code en temps réél - ainsi que de signaler toute erreur dans son code.
+
+-----------------------
+*** Getting started ***
+-----------------------
+
+Voici une façon simple pour décrire un constructeur :
+
+/**
+ * Represents a book.
+ * @constructor
+ * @param {string} title - The title of the book.
+ * @param {string} author - The author of the book.
+ */
+function Book(title, author) {
+}
+
+Lorsque le code est commenté, il suffit d'éxecuter la commande "jsdoc myFile.js" pour générer un site HTML à partir de myFile.js.
+Les fichiers HTML générés sont enregistrés dans un dossier out/ créé dans le répertoire de travail courant.
+
+------------------------------
+*** Namepaths with JSDoc 3 ***
+------------------------------
+
+Cette partie n'est pas très claire.
+Il est possible de distinguer des fonctions d'un objet qui possède le même nom.
+
+/** @constructor */
+Person = function() {
+    this.say = function() {
+        return "I'm an instance.";
+    }
+
+    function say() {
+        return "I'm inner.";
+    }
+}
+Person.say = function() {
+    return "I'm static.";
+}
+
+var p = new Person();
+p.say();      // I'm an instance.
+Person.say(); // I'm static.
+// there is no way to directly access the inner function from here
+
+Person#say  // the instance method named "say."
+Person.say  // the static method named "say."
+Person~say  // the inner method named "say.
+
+------------------------------
+*** Block and inline tags ***
+------------------------------
+
+Il existe deux types de tags, ceux de type block et ceux de type inline.
+Les tags de type block sont par exemple la description d'un paramètre d'une fonction.
+Les tags de type inline servent à référer d'autre partie de la documentation, et doivent être entouré d'accolades.
+
+/**
+ * Set the shoe's color. Use {@link Shoe#setSize} to set the shoe size.
+ *
+ * @param {string} color - The shoe's color.
+ */
+Shoe.prototype.setColor = function(color) {
+    // ...
+};
+
+On peut utiliser un tag inline pour typer plus précisément un paramètre.
+
+/**
+ * Set the shoe's color.
+ *
+ * @param {SHOE_COLORS} color - The shoe color. Must be an enumerated value of {@link SHOE_COLORS}.
+ */
+Shoe.prototype.setColor = function(color) {
+    // ...
+};
+
+Ici on sait que color est lié à Shoe.color
+
+----------------------
+*** Liste des tags ***
+----------------------
+
+@access : Spécifie le niveau d'accès d'un membre.
+
+/** @constructor */
+function OtherThingy() {
+
+    /** @private */
+    var foo = 0;
+
+    /** @protected */
+    this._bar = 1;
+
+    /** @package */
+    this.baz = 2;
+
+    /** @public */
+    this.pez = 3;
+
+}
+
+@class : indique qu'il s'agit d'une classe
+
+/**
+ * Creates a new Person.
+ * @class
+ */
+class Person() {
+}
+
+var p = new Person();
