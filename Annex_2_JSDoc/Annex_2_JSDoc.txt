@@ -113,3 +113,107 @@ class Person() {
 }
 
 var p = new Person();
+
+
+Voici comment définir un objet :
+
+/**
+ * Configuration du jeu
+ * @typedef {Object} config
+ * @property {object}  defaults               - The default values for parties.
+ * @property {number}  defaults.players       - The default number of players.
+ * @property {string}  defaults.level         - The default level for the party.
+ * @property {object}  defaults.treasure      - The default treasure.
+ * @property {number}  defaults.treasure.gold - How much gold the party starts with.
+ */
+var config = {
+    defaults: {
+        players: 1,
+        level:   'beginner',
+        treasure: {
+            gold: 0
+        }
+    }
+};
+
+Voici comment définir un enum:
+
+/**
+ * Enum for tri-state values.
+ * @readonly
+ * @enum {number}
+ */
+var triState = {
+    /** The true value */
+    TRUE: 1,
+    FALSE: -1,
+    /** @type {boolean} */
+    MAYBE: true
+};
+
+
+-----------------
+*** Fonctions ***
+-----------------
+
+/**
+ * Returns the sum of a and b
+ * @param {number} a
+ * @param {*} b // Accepte tous types de paramètres
+ * @param {boolean} retArr If set to true, the function will return an array
+ * @returns {(number|Array)} Sum of a and b or an array that contains a, b and the sum of a and b.
+ */
+function sum(a, b, num, retArr) {
+    if (retArr) {
+        return [a, b, a + b];
+    }
+    return a + b;
+}
+
+Il est possible de définir un paramètre qui se répète :
+
+/**
+ * Returns the sum of all numbers passed to the function.
+ * @param {...number} num - A positive or negative number.
+ */
+function sum(num) {
+    var i = 0, n = arguments.length, t = 0;
+    for (; i < n; i++) {
+        t += arguments[i];
+    }
+    return t;
+}
+
+Ou bien de définir un callback
+
+/**
+ * This callback type is called `requestCallback` and is displayed as a global symbol.
+ *
+ * @callback requestCallback
+ * @param {number} responseCode
+ * @param {string} responseMessage
+ */
+
+/**
+ * Does something asynchronously and executes the callback on completion.
+ * @param {requestCallback} cb - The callback that handles the response.
+ */
+function doSomethingAsynchronously(cb) {
+    // code
+};
+
+-----------------
+*** Objets ***
+-----------------
+
+Il est possible de définir un type d'objet dans une partie du code, puis d'y faire référence dans une autre partie du code
+/**
+ * @typedef PropertiesHash
+ * @type {object}
+ * @property {string} id - an ID.
+ * @property {string} name - your name.
+ * @property {number} age - your age.
+ */
+
+/** @type {PropertiesHash} */
+var props;
