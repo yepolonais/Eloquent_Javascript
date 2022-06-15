@@ -136,20 +136,7 @@ var config = {
     }
 };
 
-Voici comment définir un enum:
 
-/**
- * Enum for tri-state values.
- * @readonly
- * @enum {number}
- */
-var triState = {
-    /** The true value */
-    TRUE: 1,
-    FALSE: -1,
-    /** @type {boolean} */
-    MAYBE: true
-};
 
 
 -----------------
@@ -211,9 +198,25 @@ Il est possible de définir un type d'objet dans une partie du code, puis d'y fa
  * @typedef PropertiesHash
  * @type {object}
  * @property {string} id - an ID.
+ * @prop {string} id_2 - an ID.
  * @property {string} name - your name.
  * @property {number} age - your age.
  */
 
 /** @type {PropertiesHash} */
 var props;
+
+Voici comment définir un enum:
+
+/**
+ * Enum for tri-state values.
+ * @readonly
+ * @enum {number}
+ */
+var triState = {
+    /** The true value */
+    TRUE: 1,
+    FALSE: -1,
+    /** @type {boolean} */
+    MAYBE: true
+};
