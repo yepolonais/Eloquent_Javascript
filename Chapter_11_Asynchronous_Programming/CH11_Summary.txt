@@ -89,7 +89,7 @@ Lorsque l'on utilise des callbacks pour réaliser du code asynchrone, la convent
 Les promesses rendent le processus plus facile. Elle sont soit résolues - l'action a réussi - ou bien rejetées - l'action a échoué. Lorsqu'une promesse est rejetée, elle ne peut être captée que par un bloc catch(). catch() retourne une nouvelle promesse, qui se résout à la valeur de la promesse originel si aucun souci n'est reporté, ou alors se résout à la valeur de la fonction passée au catch.
 
 Il est aussi possible de passer un callback en second argument à then(), qui effectuera la même tache qu'un catch() et peut se combiner avec ce dernier.
-Le constructeur Promise accepte également un second argument qu'il peut utiliser pour rejeté la promesse :
+Le constructeur Promise accepte également un second argument qu'il peut utiliser pour rejeter la promesse :
 
 new Promise((_, reject) => reject(new Error("Fail")))
   .then(value => console.log("Handler 1"))
@@ -107,7 +107,7 @@ Ici le handler passé à la promesse la rejette dans tous les cas en lui passant
 *** Networks are hard ***
 -------------------------
 
-Il arrive qu'aucune réponse ne soit fourni à notre requête. Dans ce cas, il peut être judicieux de renvoyer la requête automatiquement un certain nombre de fois avant d'abandonner.
+Il arrive qu'aucune réponse ne soit renvoyée à notre requête. Dans ce cas, il peut être judicieux de relancer la requête automatiquement un certain nombre de fois avant d'abandonner.
 
 class Timeout extends Error {}
 
@@ -129,5 +129,64 @@ function request(nest, target, type, content) {
     attempt(1);
   });
 }
+
+Ceci va fonctionner, car une promesse ne peut être résolu (ou rejetée) qu'une unique fois.
+Les autres réponses à l'appel seront ignorées.
+
+--------------------------------
+*** Collections Of Promises ***
+--------------------------------
+
+Lorsque plusieurs requêtes différentes ont été envoyées d'un même endroit, il peut être intéressant d'utiliser Promise.All.
+Cette méthode retourne une promesse qui est résolu sous forme d'une liste de réponse, lorsque toutes les promesses qu'il contient ont été résolues.
+Si une seule promesse est rejetée, Promise.All est aussi rejeté.
+
+------------------------
+*** Network Flooding ***
+------------------------
+Les Objets qui peuvent être atteints à partir d'un certain endroit sont limités.
+Si l'on veut diffuser une information sur un réseau complet, il faut créer une requête qui, lorsqu'elle reçue par un nouvel objet, est renvoyée aux endroits que peut atteindre cet objet.
+Si un objet a déjà reçu l'information, il l'ignore simplement et ne la retransmet pas.
+C'est ce que l'on appelle le network flooding.
+
+------------------------
+*** Message Routing ***
+------------------------
+Le network flooding n'est pas adapté lorsque l'on souhaite diffuser un message d'un endroit précis à un autre endroit précis.
+L'auteur montre qu'il faut utiliser la notion de graphs pour trouver le chemin le plus court entre ces deux points, et ensuite transmettre le message
+
+------------------------
+*** Async Functions ***
+------------------------
+Une fonction async retourne implicitement une promesse, et peut utiliser le mot clé await dans son corps pour atteindre une requête.
+
+-----------------
+*** Generator ***
+-----------------
+La capacité d'une fonction JS a être stoppé puis relancé n'est pas limité aux fonctions async.
+C'est aussi le cas des générateurs.
+Il s'agit de fonction, notée avec un astérisque, qui retourne un itérateur.
+
+function* powers(n) {
+  for (let current = n;; current *= n) {
+    yield current;
+  }
+}
+
+for (let power of powers(3)) {
+  if (power > 50) break;
+  console.log(power);
+}
+// → 3
+// → 9
+// → 27
+
+Ici , powers(3) est un itérateur sur lequel on peut boucler.
+Le mot clé yield ne peut être utilisé que dans un générateur.
+
+----------------------
+*** The event loop ***
+----------------------
+
 
 lire https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Using_promises
