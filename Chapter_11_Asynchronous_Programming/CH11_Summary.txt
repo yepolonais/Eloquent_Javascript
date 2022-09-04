@@ -187,6 +187,36 @@ Le mot clé yield ne peut être utilisé que dans un générateur.
 ----------------------
 *** The event loop ***
 ----------------------
+La chose la plus importante à retenir dans ce chapitre est que les promesses, ou tout autre code asynchrone sera exécuté à la fin du script actuel.
+Un exemple très parlant :
+
+Promise.resolve("Done").then(console.log);
+console.log("Me first!");
+// → Me first!
+// → Done
+
+L'auteur décrit l'exécution du code JavaScript comme si ce dernier tournait en rond autour de notre programme, collectant de nouveaux évènements à traiter = The Event Loop.
+Il place ces derniers dans une queue, puis les traite l'un après l'autre, et enfin s'arrête lorsque la queue est vide.
+Le souci, c'est que si un evt prends trop de temps à être traité, il va forcément retarder l'exécution des evts suivants.
+C'est le cas dans le code suivant :
+
+let start = Date.now();
+setTimeout(() => {
+  console.log("Timeout ran at", Date.now() - start);
+}, 20);
+while (Date.now() < start + 50) {}
+console.log("Wasted time until", Date.now() - start);
+// → Wasted time until 50
+// → Timeout ran at 55
+
+Le setTimeout, qui aurait du se déclencher à 20, arrive à 55 à cause du "while" bloquant.
+
+------------------------
+*** Asynchronous Bug ***
+------------------------
+
+
+
 
 
 lire https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Using_promises
